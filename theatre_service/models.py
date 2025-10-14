@@ -1,4 +1,7 @@
+from django.conf import settings
 from django.db import models
+from rest_framework.exceptions import ValidationError
+
 
 # Create your models here.
 
@@ -53,3 +56,59 @@ class Performance(models.Model):
 
     def __str__(self):
         return f"title: {self.play.title}, show time: {self.show_time}"
+
+
+class Order(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.created_at)
+
+    class Meta:
+        ordering = ['created_at']
+
+
+class Ticket(models.Model):
+    performance = models.ForeignKey(Performance, on_delete=models.CASCADE, related_name='tickets')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='tickets')
+    row = models.PositiveIntegerField()
+    seat_in_row = models.PositiveIntegerField()
+
+    class Meta:
+        ordering = ['row', 'seat_in_row']
+
+    def clean(self):
+        for ticket_attr_value, ticket_attr_name, theatre_hall_attr_name in [
+            (self.row, "row", "rows"),
+            (self.seat_in_row, "seat", "seat_in_row"),
+        ]:
+            count_attrs = getattr(
+                self.performance.theatre_hall, theatre_hall_attr_name
+            )
+            if not (1 <= ticket_attr_value <= count_attrs):
+                raise ValidationError(
+                    {
+                        ticket_attr_name: f"{ticket_attr_name} "
+                        f"must be in available range: "
+                        f"(1, {theatre_hall_attr_name}): "
+                        f"(1, {count_attrs})"
+                    }
+                )
+
+    def save(
+        self,
+        force_insert=False,
+        force_update=False,
+        using=None,
+        update_fields=None,
+    ):
+        self.full_clean()
+        super(Ticket, self).save(
+            force_insert, force_update, using, update_fields
+        )
+
+    def __str__(self):
+        return (
+            f"{str(self.performance)} (row: {self.row}, seat: {self.seat_in_row})"
+        )
