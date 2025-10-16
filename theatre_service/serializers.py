@@ -47,7 +47,7 @@ class TheatreHallSerializer(serializers.ModelSerializer):
 class PerformanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Performance
-        fileds = ("id", "play", "theatre_hall", "show_time")
+        fields = ("id", "play", "theatre_hall", "show_time")
 
 
 class PerformanceDetailSerializer(PerformanceSerializer):
@@ -80,15 +80,15 @@ class PerformanceListSerializer(PerformanceSerializer):
         read_only=True,
         slug_field="name"
     )
-    cinema_hall_capacity = SlugRelatedField(
-        source="cinema_hall",
+    theatre_hall_capacity = SlugRelatedField(
+        source="theatre_hall",
         read_only=True,
         slug_field="capacity"
     )
 
     class Meta:
         model = Performance
-        fields = ("id", "movie", "cinema_hall_capacity", "movie_title", "cinema_hall_name")
+        fields = ("id", "play", "theatre_hall_capacity", "play_title", "theatre_hall_name")
 
 
 class TicketPerformanceSerializer(serializers.ModelSerializer):
@@ -104,7 +104,7 @@ class TicketPerformanceSerializer(serializers.ModelSerializer):
     )
     class Meta:
         model = Performance
-        fileds = ("id", "play_title", "show_time",
+        fields = ("id", "play_title", "show_time",
                   "theatre_hall_name", "cinema_hall_capacity")
 
 
