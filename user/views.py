@@ -52,6 +52,7 @@ class CreateUserView(generics.CreateAPIView):
     tags=["User"],
     summary="Retrieve or update the current user profile",
     description="Get or update the authenticated user's profile. Requires a valid JWT token.",
+    request=UserSerializer,
     responses={
         200: UserSerializer,
         401: OpenApiExample(
