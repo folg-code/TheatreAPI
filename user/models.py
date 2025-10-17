@@ -4,7 +4,6 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 
-
 class UserManager(BaseUserManager):
     """Custom user manager where email is the unique identifier."""
 

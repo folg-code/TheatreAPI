@@ -3,7 +3,9 @@ from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField, PrimaryKeyRelatedField
 from rest_framework.validators import UniqueTogetherValidator
 
-from theatre_service.models import Actor, Genre, TheatreHall, Performance, Play, Ticket, Order
+from theatre_service.models import (
+    Actor, Genre, TheatreHall,
+    Performance, Play, Ticket, Order)
 
 
 class ActorSerializer(serializers.ModelSerializer):
@@ -66,7 +68,9 @@ class PerformanceDetailSerializer(PerformanceSerializer):
 
     class Meta:
         model = Performance
-        fields = ("id","play","show_time","play_id","theatre_hall_id","theatre_hall")
+        fields = ("id", "play", "show_time",
+                  "play_id", "theatre_hall_id", "theatre_hall"
+                  )
 
 
 class PerformanceListSerializer(PerformanceSerializer):
@@ -88,7 +92,8 @@ class PerformanceListSerializer(PerformanceSerializer):
 
     class Meta:
         model = Performance
-        fields = ("id", "play", "theatre_hall_capacity", "play_title", "theatre_hall_name")
+        fields = ("id", "play", "theatre_hall_capacity",
+                  "play_title", "theatre_hall_name")
 
 
 class TicketPerformanceSerializer(serializers.ModelSerializer):
@@ -102,6 +107,7 @@ class TicketPerformanceSerializer(serializers.ModelSerializer):
         source="cinema_hall.capacity",
         read_only=True,
     )
+
     class Meta:
         model = Performance
         fields = ("id", "play_title", "show_time",
@@ -115,6 +121,7 @@ class TicketSerializer(serializers.ModelSerializer):
         source="performance",
         write_only=True,
     )
+
     class Meta:
         model = Ticket
         fields = ("id", "row", "seat_in_row", "performance", "performance_id")
