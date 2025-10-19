@@ -1,9 +1,6 @@
 from django.conf import settings
 from django.db import models
-from rest_framework.exceptions import ValidationError
-
-
-# Create your models here.
+from django.core.exceptions import ValidationError
 
 
 class Actor(models.Model):

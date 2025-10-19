@@ -9,7 +9,7 @@ from theatre_service.views import (
     GenreViewSet,
     OrderViewSet)
 
-app_name = 'theatre_service'
+
 
 router = DefaultRouter()
 
